@@ -2,24 +2,13 @@ package com.phuc.tictactoe;
 
 public class App {
 
-    private int numRows = 3;
-    private int numCols = 3;
-    private CellState[][] boardState = new CellState[numRows][numCols];
-
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        if (args.length != 2) {
+            System.err
+                    .println("Please input EXACTLY 1 command line argument, 1 for Player first, 2 for Computer first.");
+        }
+        Game.setFirstPlayer(Integer.parseInt(args[1]));
+        Game.setCurrentState(GameState.INITIALIZE);
     }
 
-    public CellState getCell(int id) {
-        /**
-         * Hardcoded Cell IDs
-         *
-         * 1 2 3
-         *
-         * 4 5 6
-         *
-         * 7 8 9
-         */
-        return boardState[id % 3][(id - 1) / 3];
-    }
 }
