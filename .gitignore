@@ -1,0 +1,13 @@
+# compiled java files
+*.class
+
+# build folders
+bin/
+out/
+build/
+
+# vscode settings
+.vscode/
+
+# mac junk
+.DS_Store
