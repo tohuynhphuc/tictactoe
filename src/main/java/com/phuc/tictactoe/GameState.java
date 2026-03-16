@@ -6,5 +6,6 @@ public enum GameState {
     COMPUTER,
     WIN,
     LOSE,
-    DRAW
+    DRAW,
+    END
 }
