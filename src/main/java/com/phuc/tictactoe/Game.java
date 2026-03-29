@@ -2,19 +2,23 @@ package com.phuc.tictactoe;
 
 import java.util.Scanner;
 
+import com.phuc.tictactoe.players.Computer;
+import com.phuc.tictactoe.players.Human;
+import com.phuc.tictactoe.players.Player;
+
 public class Game {
 
     private GameState currentState;
     private boolean isUserFirst;
 
     private GameBoard board;
-    private int numRows = 3;
-    private int numCols = 3;
+    private final int numRows = 3;
+    private final int numCols = 3;
 
     private Player user;
     private Player computer;
 
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public Game(Scanner scanner) {
         this.scanner = scanner;
@@ -23,35 +27,10 @@ public class Game {
     private void initialize() {
         board = new GameBoard(numRows, numCols);
 
-        user = new Player("User", false, scanner);
-        computer = new Player("Computer", true, scanner);
+        user = new Human("User", scanner);
+        computer = new Computer("Computer", scanner);
     }
 
-    // private void userTurn() {
-    //     board.displayBoard();
-    //     System.out.println("User turn. Please enter a move.");
-    //     boolean isValidMove = false;
-    //     Scanner scanner = new Scanner(System.in);
-    //     while (!isValidMove) {
-    //         int input = scanner.nextInt();
-    //         isValidMove = board.setCell(input, currentState);
-    //         if (!isValidMove) {
-    //             System.out.println("Invalid move.");
-    //         }
-    //     }
-    //     scanner.close();
-    //     board.checkWinner();
-    // }
-    // private void computerTurn() {
-    //     board.displayBoard();
-    //     System.out.println("Computer turn. Please enter a move.");
-    //     for (int i = 1; i <= numRows * numCols; i++) {
-    //         if (board.setCell(i, currentState)) {
-    //             System.out.println(i);
-    //         }
-    //     }
-    //     board.checkWinner();
-    // }
     public void gameLoop() {
         while (currentState != GameState.END) {
             switch (currentState) {
@@ -60,12 +39,12 @@ public class Game {
                     setCurrentState(isUserFirst ? GameState.USER : GameState.COMPUTER);
                     break;
                 case USER:
-                    board.setCell(user.playerTurn(board), currentState);
-                    finishTurn(board, currentState);
+                    board.setCell(user.makeMove(board), currentState);
+                    finishTurn(currentState);
                     break;
                 case COMPUTER:
-                    board.setCell(computer.playerTurn(board), currentState);
-                    finishTurn(board, currentState);
+                    board.setCell(computer.makeMove(board), currentState);
+                    finishTurn(currentState);
                     break;
                 case WIN:
                     user.announceWin(board);
@@ -86,11 +65,10 @@ public class Game {
         }
     }
 
-    private void finishTurn(GameBoard board, GameState currentState) {
+    private void finishTurn(GameState currentState) {
         CellState winner = board.checkWinner();
         switch (winner) {
             case COMPUTER:
-                // Computer wins
                 setCurrentState(GameState.LOSE);
                 return;
             case USER:

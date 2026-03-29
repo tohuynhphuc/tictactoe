@@ -8,7 +8,6 @@ public class App {
         if (args.length != 1) {
             System.err
                     .println("Please input EXACTLY 1 command line argument, 1 for Player first, 2 for Computer first.");
-            System.out.println(args);
             return;
         }
 

@@ -1,20 +1,22 @@
-package com.phuc.tictactoe;
+package com.phuc.tictactoe.players;
 
 import java.util.Scanner;
 
-public class Player {
+import com.phuc.tictactoe.GameBoard;
 
-    private boolean isComputer;
-    private String name;
-    private Scanner scanner;
+public abstract class Player {
 
-    public Player(String name, boolean isComputer, Scanner scanner) {
-        this.isComputer = isComputer;
+    protected final String name;
+    protected final Scanner scanner;
+
+    public Player(String name, Scanner scanner) {
         this.name = name;
         this.scanner = scanner;
     }
 
-    public int playerTurn(GameBoard board) {
+    public abstract int makeMove(GameBoard board);
+
+    /* {
         board.displayBoard();
         System.out.println(name + "\'s turn. Please enter a move.");
 
@@ -39,8 +41,7 @@ public class Player {
         }
 
         return cell;
-    }
-
+    }*/
     public void announceWin(GameBoard board) {
         board.displayBoard();
         System.out.println(name + " WIN !!!");
