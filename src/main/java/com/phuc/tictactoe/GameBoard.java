@@ -11,6 +11,8 @@ public class GameBoard {
         numRows = rows;
         numCols = cols;
 
+        boardState = new CellState[numRows][numCols];
+
         initializeBoard();
     }
 
@@ -123,11 +125,7 @@ public class GameBoard {
         return winner;
     }
 
-    public boolean checkDraw() {
-        if (checkWinner() != CellState.EMPTY) {
-            return false;
-        }
-
+    public boolean isFull() {
         for (int i = 1; i <= numRows * numCols; i++) {
             if (getCell(i) == CellState.EMPTY) {
                 return false;
@@ -191,6 +189,10 @@ public class GameBoard {
 
     public int getNumCols() {
         return numCols;
+    }
+
+    public void setupTestScenario(CellState[][] testScenario) {
+        boardState = testScenario;
     }
 
 }

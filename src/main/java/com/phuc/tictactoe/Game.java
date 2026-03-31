@@ -76,8 +76,7 @@ public class Game {
                 return;
             case EMPTY:
             default:
-                // No Winner
-                if (board.checkDraw()) {
+                if (board.isFull()) {
                     setCurrentState(GameState.DRAW);
                     return;
                 }
