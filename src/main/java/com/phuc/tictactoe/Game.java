@@ -1,25 +1,20 @@
 package com.phuc.tictactoe;
 
-import java.util.Scanner;
-
 import com.phuc.tictactoe.players.Player;
 
 public class Game {
 
     private GameState currentState;
-    private boolean isFirstPlayer;
+    private boolean isTurnFirstPlayer;
 
     private GameBoard board;
     private final int numRows = 3;
     private final int numCols = 3;
 
-    private Player firstPlayer;
-    private Player secondPlayer;
+    private final Player firstPlayer;
+    private final Player secondPlayer;
 
-    private final Scanner scanner;
-
-    public Game(Scanner scanner, Player firstPlayer, Player secondPlayer) {
-        this.scanner = scanner;
+    public Game(Player firstPlayer, Player secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
     }
@@ -33,16 +28,21 @@ public class Game {
             switch (currentState) {
                 case INITIALIZE:
                     initialize();
-                    setCurrentState(isFirstPlayer ? GameState.USER : GameState.COMPUTER);
+                    System.out.println("Hello!");
+                    setCurrentState(GameState.PLAYER);
                     break;
-                case USER:
-                    board.setCell(firstPlayer.makeMove(board), currentState);
+                case PLAYER:
+                    playTurn();
                     finishTurn(currentState);
                     break;
-                case COMPUTER:
-                    board.setCell(secondPlayer.makeMove(board), currentState);
-                    finishTurn(currentState);
-                    break;
+                // case USER:
+                //     board.setCell(firstPlayer.makeMove(board), isTurnFirstPlayer);
+                //     finishTurn(currentState);
+                //     break;
+                // case COMPUTER:
+                //     board.setCell(secondPlayer.makeMove(board), isTurnFirstPlayer);
+                //     finishTurn(currentState);
+                //     break;
                 case WIN:
                     firstPlayer.announceWin(board);
                     setCurrentState(GameState.END);
@@ -60,6 +60,16 @@ public class Game {
                     return;
             }
         }
+    }
+
+    private void playTurn() {
+        int move;
+        if (isTurnFirstPlayer) {
+            move = firstPlayer.makeMove(board);
+        } else {
+            move = secondPlayer.makeMove(board);
+        }
+        board.setCell(move, isTurnFirstPlayer);
     }
 
     private void finishTurn(GameState currentState) {
@@ -80,21 +90,12 @@ public class Game {
         }
 
         // Switch players
-        setCurrentState(currentState == GameState.COMPUTER ? GameState.USER : GameState.COMPUTER);
+        isTurnFirstPlayer = !isTurnFirstPlayer;
+        // setCurrentState(currentState == GameState.COMPUTER ? GameState.USER : GameState.COMPUTER);
     }
 
     public void setFirstPlayer(int value) {
-        switch (value) {
-            case 1:
-                isFirstPlayer = true;
-                break;
-            case 2:
-                isFirstPlayer = false;
-                break;
-            default:
-                System.err.println("Incorrect Argument. Please input EXACTLY 1 command line argument, 1 for Player first, 2 for Computer first.");
-                break;
-        }
+        isTurnFirstPlayer = value == 1;
     }
 
     public GameState getCurrentState() {

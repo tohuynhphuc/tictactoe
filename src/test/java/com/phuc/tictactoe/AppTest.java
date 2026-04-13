@@ -68,4 +68,13 @@ public class AppTest {
         assertEquals(expectedOutput, scanner.readLine());
     }
 
+    @Test
+    public void shouldPassCorrectCLIArgument() throws IOException {
+        App.main(new String[]{"1"});
+
+        String expectedOutput = "Hello!";
+
+        assertEquals(expectedOutput, scanner.readLine());
+    }
+
 }

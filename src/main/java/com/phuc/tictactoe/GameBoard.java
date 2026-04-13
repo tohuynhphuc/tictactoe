@@ -27,7 +27,7 @@ public class GameBoard {
     public void displayBoard() {
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                System.out.print("| " + displayCellState(getCell(i, j)) + " ");
+                System.out.print("| " + displayCellState(getCell(convertToId(i, j))) + " ");
             }
             System.out.print("|\n");
         }
@@ -51,38 +51,38 @@ public class GameBoard {
 
         // Check Rows
         for (int i = 0; i < numRows; i++) {
-            if (getCell(i, 0) == CellState.EMPTY) {
+            if (getCell(convertToId(i, 0)) == CellState.EMPTY) {
                 continue;
             }
 
             boolean flag = true;
             for (int j = 1; j < numCols; j++) {
-                if (getCell(i, j) != getCell(i, 0)) {
+                if (getCell(convertToId(i, j)) != getCell(convertToId(i, 0))) {
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                winner = getCell(i, 0);
+                winner = getCell(convertToId(i, 0));
                 return winner;
             }
         }
 
         // Check Cols
         for (int j = 0; j < numCols; j++) {
-            if (getCell(0, j) == CellState.EMPTY) {
+            if (getCell(convertToId(0, j)) == CellState.EMPTY) {
                 continue;
             }
 
             boolean flag = true;
             for (int i = 1; i < numRows; i++) {
-                if (getCell(i, j) != getCell(0, j)) {
+                if (getCell(convertToId(i, j)) != getCell(convertToId(0, j))) {
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                winner = getCell(0, j);
+                winner = getCell(convertToId(0, j));
                 return winner;
             }
         }
@@ -93,31 +93,31 @@ public class GameBoard {
         }
 
         // Check Diagonals \
-        if (getCell(0, 0) != CellState.EMPTY) {
+        if (getCell(1) != CellState.EMPTY) {
             boolean flag = true;
             for (int i = 1; i < numRows; i++) {
-                if (getCell(i, i) != getCell(0, 0)) {
+                if (getCell(convertToId(i, i)) != getCell(1)) {
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                winner = getCell(0, 0);
+                winner = getCell(1);
                 return winner;
             }
         }
 
         // Check Diagonals /
-        if (getCell(0, numRows - 1) != CellState.EMPTY) {
+        if (getCell(convertToId(0, numRows - 1)) != CellState.EMPTY) {
             boolean flag = true;
             for (int i = 1; i < numRows; i++) {
-                if (getCell(i, numRows - 1 - i) != getCell(0, numRows - 1)) {
+                if (getCell(convertToId(i, numRows - 1 - i)) != getCell(convertToId(0, numRows - 1))) {
                     flag = false;
                     break;
                 }
             }
             if (flag) {
-                winner = getCell(0, numRows - 1);
+                winner = getCell(convertToId(0, numRows - 1));
                 return winner;
             }
         }
@@ -135,52 +135,33 @@ public class GameBoard {
         return true;
     }
 
-    public boolean isValid(int id) {
-        if (id < 1 || id > numRows * numCols) {
-            return false;
-        }
-
-        int n = (id - 1) / numCols;
-        int m = (id - 1) % numCols;
-        return isValid(n, m);
+    private int convertToId(int n, int m) {
+        return n * numCols + m + 1;
     }
 
-    private boolean isValid(int i, int j) {
+    public boolean isOutOfBounds(int id) {
+        return id < 1 || id > numRows * numCols;
+    }
+
+    public boolean isValid(int id) {
+        int i = (id - 1) / numCols;
+        int j = (id - 1) % numCols;
+
         return boardState[i][j] == CellState.EMPTY;
     }
 
     public CellState getCell(int id) {
-        if (id < 1 || id > numRows * numCols) {
-            return null;
-        }
+        int i = (id - 1) / numCols;
+        int j = (id - 1) % numCols;
 
-        int n = (id - 1) / numCols;
-        int m = (id - 1) % numCols;
-
-        return getCell(n, m);
-    }
-
-    public boolean setCell(int id, GameState state) {
-        if (id < 1 || id > numRows * numCols) {
-            return false;
-        }
-
-        int n = (id - 1) / numCols;
-        int m = (id - 1) % numCols;
-
-        return setCell(n, m, state);
-    }
-
-    public boolean setCell(int i, int j, GameState state) {
-        if (isValid(i, j)) {
-            boardState[i][j] = state == GameState.USER ? CellState.USER : CellState.COMPUTER;
-            return true;
-        }
-        return false;
-    }
-
-    public CellState getCell(int i, int j) {
         return boardState[i][j];
+    }
+
+    public void setCell(int id, boolean isTurnFirstPlayer) {
+        int i = (id - 1) / numCols;
+        int j = (id - 1) % numCols;
+
+        boardState[i][j] = isTurnFirstPlayer ? CellState.USER : CellState.COMPUTER;
     }
 
     public int getNumRows() {

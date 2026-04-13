@@ -1,13 +1,11 @@
 package com.phuc.tictactoe.players;
 
-import java.util.Scanner;
-
 import com.phuc.tictactoe.GameBoard;
 
 public class Computer extends Player {
 
-    public Computer(String name, Scanner scanner) {
-        super(name, scanner);
+    public Computer(String name) {
+        super(name);
     }
 
     @Override

@@ -6,8 +6,11 @@ import com.phuc.tictactoe.GameBoard;
 
 public class Human extends Player {
 
+    private final Scanner scanner;
+
     public Human(String name, Scanner scanner) {
-        super(name, scanner);
+        super(name);
+        this.scanner = scanner;
     }
 
     @Override
@@ -21,7 +24,7 @@ public class Human extends Player {
         while (!isValidMove) {
             cell = Integer.parseInt(scanner.nextLine());
 
-            isValidMove = board.isValid(cell);
+            isValidMove = !board.isOutOfBounds(cell) && board.isValid(cell);
             if (!isValidMove) {
                 System.out.println("Invalid move.");
             }

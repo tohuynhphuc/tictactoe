@@ -14,16 +14,18 @@ public class App {
             return;
         }
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            Player user = new Human("User", scanner);
-            Player computer = new Computer("Computer", scanner);
+        Scanner scanner = new Scanner(System.in);
+        Player user = new Human("Player#1", scanner);
+        Player computer = new Computer("Player#2");
 
-            Game game = new Game(scanner, user, computer);
+        Game game = new Game(user, computer);
 
-            game.setFirstPlayer(Integer.parseInt(args[0]));
-            game.setCurrentState(GameState.INITIALIZE);
+        game.setFirstPlayer(Integer.parseInt(args[0]));
+        game.setCurrentState(GameState.INITIALIZE);
+        Thread gameThread = new Thread(() -> {
             game.gameLoop();
-        }
+        });
+        gameThread.start();
     }
 
 }
