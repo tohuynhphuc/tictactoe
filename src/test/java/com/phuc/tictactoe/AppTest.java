@@ -1,69 +1,71 @@
 package com.phuc.tictactoe;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("unused")
 public class AppTest {
 
-    private final GameBoard board = new GameBoard(3, 3);
+    private final PrintStream originalOutputStream = System.out;
 
-    @Test
-    public void shouldAnswerWithTrue() {
-        assertTrue(true);
+    private PipedOutputStream outputStream;
+    private BufferedReader scanner;
+
+    @BeforeEach
+    private void setUp() {
+        outputStream = new PipedOutputStream();
+        try {
+            PipedInputStream inputStream = new PipedInputStream(outputStream);
+            scanner = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            //Logger.getLogger(AbstractPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.setOut(new PrintStream(outputStream));
+    }
+
+    @AfterEach
+    private void tearDown() {
+        System.setOut(originalOutputStream);
     }
 
     @Test
-    public void shouldCheckBoardIsFull() {
-        CellState[][] testScenario = {
-            {CellState.COMPUTER, CellState.USER, CellState.COMPUTER},
-            {CellState.COMPUTER, CellState.USER, CellState.COMPUTER},
-            {CellState.USER, CellState.COMPUTER, CellState.USER}
-        };
+    public void shouldWarnNoCLIArgument() throws IOException {
+        // ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        // System.setOut(new PrintStream(outputStream));
 
-        board.setupTestScenario(testScenario);
+        App.main(new String[]{});
 
-        assertTrue(board.isFull());
+        String expectedOutput = "Please, input a valid option [1-2]";
+
+        assertEquals(expectedOutput, scanner.readLine());
     }
 
     @Test
-    public void shouldCheckBoardIsNotFull() {
-        CellState[][] testScenario = {
-            {CellState.COMPUTER, CellState.USER, CellState.COMPUTER},
-            {CellState.COMPUTER, CellState.USER, CellState.COMPUTER},
-            {CellState.USER, CellState.EMPTY, CellState.USER}
-        };
+    public void shouldWarnInvalidCLIArgument() throws IOException {
+        App.main(new String[]{"abc"});
 
-        board.setupTestScenario(testScenario);
+        String expectedOutput = "Please, input a valid option [1-2]";
 
-        assertFalse(board.isFull());
+        assertEquals(expectedOutput, scanner.readLine());
     }
 
     @Test
-    public void shouldCheckComputerWin() {
-        CellState[][] testScenario = {
-            {CellState.COMPUTER, CellState.USER, CellState.COMPUTER},
-            {CellState.COMPUTER, CellState.USER, CellState.COMPUTER},
-            {CellState.COMPUTER, CellState.EMPTY, CellState.USER}
-        };
+    public void shouldWarnMultipleCLIArgument() throws IOException {
+        App.main(new String[]{"1", "2"});
 
-        board.setupTestScenario(testScenario);
+        String expectedOutput = "Please, input a valid option [1-2]";
 
-        assertEquals(board.checkWinner(), CellState.COMPUTER);
-    }
-
-    @Test
-    public void shouldCheckUserWin() {
-        CellState[][] testScenario = {
-            {CellState.COMPUTER, CellState.USER, CellState.USER},
-            {CellState.COMPUTER, CellState.USER, CellState.COMPUTER},
-            {CellState.USER, CellState.EMPTY, CellState.COMPUTER}
-        };
-
-        board.setupTestScenario(testScenario);
-
-        assertEquals(board.checkWinner(), CellState.USER);
+        assertEquals(expectedOutput, scanner.readLine());
     }
 
 }

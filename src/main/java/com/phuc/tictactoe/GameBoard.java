@@ -29,7 +29,7 @@ public class GameBoard {
             for (int j = 0; j < numCols; j++) {
                 System.out.print("| " + displayCellState(getCell(i, j)) + " ");
             }
-            System.out.print("|\n\n");
+            System.out.print("|\n");
         }
     }
 
@@ -145,7 +145,7 @@ public class GameBoard {
         return isValid(n, m);
     }
 
-    public boolean isValid(int i, int j) {
+    private boolean isValid(int i, int j) {
         return boardState[i][j] == CellState.EMPTY;
     }
 

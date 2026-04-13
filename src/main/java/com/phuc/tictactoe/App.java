@@ -2,23 +2,28 @@ package com.phuc.tictactoe;
 
 import java.util.Scanner;
 
+import com.phuc.tictactoe.players.Computer;
+import com.phuc.tictactoe.players.Human;
+import com.phuc.tictactoe.players.Player;
+
 public class App {
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err
-                    .println("Please input EXACTLY 1 command line argument, 1 for Player first, 2 for Computer first.");
+        if (args.length != 1 || (args.length == 1 && (!args[0].equals("1") && !args[0].equals("2")))) {
+            System.out.println("Please, input a valid option [1-2]");
             return;
         }
 
-        Scanner scanner = new Scanner(System.in);
-        Game game = new Game(scanner);
+        try (Scanner scanner = new Scanner(System.in)) {
+            Player user = new Human("User", scanner);
+            Player computer = new Computer("Computer", scanner);
 
-        game.setFirstPlayer(Integer.parseInt(args[0]));
-        game.setCurrentState(GameState.INITIALIZE);
-        game.gameLoop();
+            Game game = new Game(scanner, user, computer);
 
-        scanner.close();
+            game.setFirstPlayer(Integer.parseInt(args[0]));
+            game.setCurrentState(GameState.INITIALIZE);
+            game.gameLoop();
+        }
     }
 
 }
